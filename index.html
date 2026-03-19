@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>실업급여 계산기 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --white: #ffffff;
+    --border: #e4e7ed;
+    --border2: #d0d5de;
+    --accent: #2563eb;
+    --accent-light: #eff4ff;
+    --accent-mid: #dbeafe;
+    --success: #16a34a;
+    --success-light: #f0fdf4;
+    --danger: #dc2626;
+    --danger-light: #fef2f2;
+    --warning: #d97706;
+    --warning-light: #fffbeb;
+    --text: #111827;
+    --text2: #6b7280;
+    --text3: #9ca3af;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Pretendard', -apple-system, 'Apple SD Gothic Neo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 24px 28px;
+    text-align: center;
+  }
+  .header-badge {
+    display: inline-block;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 3px 12px;
+    border-radius: 100px;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: 800; color: var(--text);
+    letter-spacing: -0.03em; margin-bottom: 6px;
+  }
+  .header p { color: var(--text2); font-size: 14px; }
+
+  .container { max-width: 680px; margin: 0 auto; padding: 28px 16px 80px; }
+
+  /* ── Tabs ── */
+  .question-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+  .q-tab {
+    background: var(--white); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px;
+    cursor: pointer; transition: all 0.2s; text-align: left;
+  }
+  .q-tab.active { border-color: var(--accent); background: var(--accent-light); }
+  .q-tab-num { font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: 0.06em; margin-bottom: 4px; }
+  .q-tab.active .q-tab-num { color: var(--accent); }
+  .q-tab-title { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.35; }
+  .q-tab-sub { font-size: 12px; color: var(--text3); margin-top: 3px; }
+
+  /* ── Sections ── */
+  .section { display: none; }
+  .section.visible { display: block; animation: fadeUp 0.3s ease both; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px;
+    margin-bottom: 12px; box-shadow: var(--shadow);
+  }
+  .card-label {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 700; color: var(--text2);
+    letter-spacing: 0.05em; text-transform: uppercase;
+    margin-bottom: 16px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-label-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+
+  /* ── Fields ── */
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  label { display: block; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 5px; }
+  input[type="date"], input[type="number"], select {
+    width: 100%; background: var(--white); border: 1px solid var(--border2);
+    border-radius: var(--radius-sm); color: var(--text);
+    font-family: 'Pretendard', sans-serif; font-size: 14px;
+    padding: 10px 12px; outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    appearance: none; -webkit-appearance: none; box-shadow: var(--shadow-sm);
+  }
+  input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+  input::placeholder { color: var(--text3); }
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '▾'; position: absolute; right: 12px;
+    top: 50%; transform: translateY(-50%);
+    color: var(--text3); pointer-events: none; font-size: 11px;
+  }
+
+  /* ── Toggle ── */
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 11px 14px; background: var(--bg);
+    border-radius: var(--radius-sm); border: 1px solid var(--border);
+    cursor: pointer; user-select: none; transition: border-color 0.15s;
+  }
+  .toggle-row:hover { border-color: var(--accent); }
+  .toggle-label { font-size: 13px; font-weight: 600; }
+  .toggle-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
+  .toggle-switch {
+    width: 40px; height: 22px; background: var(--border2);
+    border-radius: 100px; position: relative;
+    transition: background 0.2s; flex-shrink: 0; margin-left: 12px;
+  }
+  .toggle-switch.on { background: var(--accent); }
+  .toggle-switch::after {
+    content: ''; width: 16px; height: 16px; background: white;
+    border-radius: 50%; position: absolute; top: 3px; left: 3px;
+    transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle-switch.on::after { transform: translateX(18px); }
+
+  /* ── Sub cards (직장 항목) ── */
+  .sub-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 10px; }
+  .sub-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .sub-badge { font-size: 11px; font-weight: 700; color: var(--accent); background: var(--accent-mid); padding: 2px 10px; border-radius: 100px; }
+
+  /* ── 급여 3개월 고정 입력 ── */
+  .salary-3-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .money-input-wrap { position: relative; }
+  .money-input-wrap input {
+    width: 100%; padding: 10px 24px 10px 12px;
+    background: var(--white); border: 1px solid var(--border2);
+    border-radius: var(--radius-sm); color: var(--text);
+    font-family: 'Pretendard', sans-serif; font-size: 14px; font-weight: 600;
+    outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+    box-shadow: var(--shadow-sm); text-align: right;
+  }
+  .money-input-wrap input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+  .money-unit { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 11px; color: var(--text3); pointer-events: none; }
+
+  /* ── 보너스 가이드 아코디언 ── */
+  .bonus-guide { border: 1px solid #fde68a; border-radius: var(--radius-sm); overflow: hidden; margin-top: 4px; }
+  .bonus-guide-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 11px 14px; background: var(--warning-light);
+    cursor: pointer; font-size: 13px; font-weight: 600; color: var(--warning);
+    user-select: none;
+  }
+  .bonus-guide-header:hover { background: #fef3c7; }
+  .bonus-arrow { font-size: 11px; transition: transform 0.2s; }
+  .bonus-arrow.open { transform: rotate(180deg); }
+  .bonus-guide-body { display: none; padding: 14px; background: var(--white); font-size: 13px; color: var(--text2); line-height: 1.7; border-top: 1px solid #fde68a; }
+  .bonus-guide-body.open { display: block; }
+  .bonus-rule { background: var(--bg); border-radius: 6px; padding: 10px 12px; }
+  .bonus-rule-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .bonus-rule-desc { font-size: 12.5px; color: var(--text2); line-height: 1.65; }
+
+  /* ── Buttons ── */
+  .btn { border: none; border-radius: var(--radius-sm); font-family: 'Pretendard', sans-serif; font-weight: 600; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+  .btn-primary {
+    background: var(--accent); color: white;
+    padding: 14px 24px; font-size: 15px;
+    border-radius: var(--radius); width: 100%;
+    letter-spacing: 0.01em;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.25);
+  }
+  .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(37,99,235,0.3); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-add { background: white; border: 1px dashed var(--border2); color: var(--text2); padding: 9px 16px; font-size: 13px; border-radius: var(--radius-sm); width: 100%; margin-top: 4px; }
+  .btn-add:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+  .btn-remove { background: none; border: 1px solid var(--border); color: var(--text3); border-radius: 6px; padding: 6px 8px; font-size: 12px; cursor: pointer; transition: all 0.15s; line-height: 1; }
+  .btn-remove:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-light); }
+
+  /* ── Info / Warn boxes ── */
+  .info-box { background: var(--accent-light); border: 1px solid var(--accent-mid); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 12.5px; color: #1e40af; margin-top: 12px; display: flex; gap: 8px; line-height: 1.6; }
+  .warn-box { background: var(--warning-light); border: 1px solid #fde68a; border-radius: var(--radius-sm); padding: 12px 14px; font-size: 12.5px; color: var(--warning); margin-top: 8px; display: flex; gap: 8px; line-height: 1.6; }
+
+  /* ── Results ── */
+  .verdict-card { border-radius: var(--radius); padding: 28px 24px; text-align: center; margin-bottom: 12px; border: 1px solid; }
+  .verdict-card.ok  { background: var(--success-light); border-color: #bbf7d0; }
+  .verdict-card.ng  { background: var(--danger-light);  border-color: #fecaca; }
+  .verdict-icon  { font-size: 36px; margin-bottom: 10px; }
+  .verdict-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+  .verdict-desc  { font-size: 13px; color: var(--text2); }
+
+  .total-card { background: var(--accent); border-radius: var(--radius); padding: 28px 24px; text-align: center; margin-bottom: 12px; color: white; }
+  .total-label { font-size: 12px; font-weight: 600; opacity: 0.8; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+  .total-value { font-size: clamp(30px, 6vw, 42px); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 4px; }
+  .total-sub   { font-size: 13px; opacity: 0.75; }
+
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; text-align: center; box-shadow: var(--shadow-sm); }
+  .stat-label { font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px; }
+  .stat-value { font-size: 26px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+  .stat-unit  { font-size: 13px; color: var(--text2); font-weight: 500; }
+
+  .detail-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 12px; box-shadow: var(--shadow-sm); }
+  .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; font-size: 13px; border-bottom: 1px solid var(--border); }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-row .k { color: var(--text2); }
+  .detail-row .v { font-weight: 700; color: var(--text); }
+
+  /* ── Disclaimer ── */
+  .disclaimer { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; margin-top: 24px; }
+  .disclaimer-title { font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  .disclaimer p { font-size: 11.5px; color: var(--text3); line-height: 1.7; }
+
+  .footer { text-align: center; padding: 20px; font-size: 11.5px; color: var(--text3); border-top: 1px solid var(--border); background: var(--white); margin-top: 40px; }
+
+  .btn-autofill {
+    display: inline-flex; align-items: center; gap: 4px;
+    margin-top: 8px; padding: 7px 12px;
+    background: none; border: 1px solid var(--accent-mid);
+    border-radius: 6px; font-family: 'Pretendard', sans-serif;
+    font-size: 12px; font-weight: 600; color: var(--accent);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn-autofill:hover { background: var(--accent-light); border-color: var(--accent); }
+
+  @media (max-width: 480px) {
+    .field-row       { grid-template-columns: 1fr; }
+    .stats-row       { grid-template-columns: 1fr; }
+    .salary-3-grid   { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">2026 고용보험법 기준</div>
+  <h1>실업급여 계산기</h1>
+  <p>권고사직 후 받을 수 있는 실업급여를 확인해보세요</p>
+</div>
+
+<div class="container">
+
+  <!-- ── 탭 ── -->
+  <div class="question-tabs">
+    <div class="q-tab active" id="tab1" onclick="switchTab(1)">
+      <div class="q-tab-num">Q 1</div>
+      <div class="q-tab-title">수급 조건에<br>해당하나요?</div>
+      <div class="q-tab-sub">자격 여부 확인</div>
+    </div>
+    <div class="q-tab" id="tab2" onclick="switchTab(2)">
+      <div class="q-tab-num">Q 2</div>
+      <div class="q-tab-title">얼마, 언제까지<br>받을 수 있나요?</div>
+      <div class="q-tab-sub">예상 수급액·기간 계산</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════ -->
+  <!-- Q1 : 수급 조건                  -->
+  <!-- ════════════════════════════════ -->
+  <div class="section visible" id="section1">
+
+    <!-- 근무 이력 (먼저) -->
+    <div class="card">
+      <div class="card-label"><div class="card-label-dot"></div>근무 이력</div>
+      <div id="companyList"></div>
+      <div class="info-box" style="margin-top:4px">
+        <span>ℹ️</span>
+        <span>퇴사일 이전 <strong>18개월</strong> 내 피보험 단위기간 <strong>180일 이상</strong>이면 수급 가능합니다. 무급휴직 30일 이상 시 기준기간이 최대 <strong>36개월</strong>로 연장됩니다.</span>
+      </div>
+    </div>
+
+    <!-- 추가 정보 (아래) -->
+    <div class="card">
+      <div class="card-label"><div class="card-label-dot"></div>추가 정보</div>
+
+      <div class="field">
+        <label>장애인 여부</label>
+        <div class="toggle-row" onclick="toggleDisability()">
+          <div>
+            <div class="toggle-label">장애인 등록증 보유</div>
+            <div class="toggle-sub">해당 시 수급일수 증가</div>
+          </div>
+          <div class="toggle-switch" id="disabilityToggle"></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>반복수급 여부</label>
+        <div class="toggle-row" onclick="toggleRepeat()">
+          <div>
+            <div class="toggle-label">최근 5년 내 3회 이상 수급 이력</div>
+            <div class="toggle-sub">해당 시 급여액 감액 적용</div>
+          </div>
+          <div class="toggle-switch" id="repeatToggle"></div>
+        </div>
+        <div class="warn-box" id="repeatWarn" style="display:none">
+          <span>⚠️</span>
+          <span>최근 5년 이내 3회 이상 수급 시 소정급여일수가 감액됩니다 (3회: 10%, 4회↑: 25%). 정확한 감액률은 고용센터에서 확인하세요.</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="checkEligibility()">수급 조건 확인하기 →</button>
+    <div id="eligResult" style="margin-top:14px; display:none"></div>
+
+  </div>
+
+  <!-- ════════════════════════════════ -->
+  <!-- Q2 : 수급액·기간 계산           -->
+  <!-- ════════════════════════════════ -->
+  <div class="section" id="section2">
+
+    <!-- 기본 정보 -->
+    <div class="card">
+      <div class="card-label"><div class="card-label-dot"></div>기본 정보</div>
+      <div class="field-row">
+        <div class="field">
+          <label>퇴사일 *</label>
+          <input type="date" id="resignDate">
+        </div>
+        <div class="field">
+          <label>퇴직 당시 나이 *</label>
+          <div class="select-wrap">
+            <select id="ageGroup">
+              <option value="">선택해주세요</option>
+              <option value="young">만 50세 미만</option>
+              <option value="senior">만 50세 이상</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>고용보험 총 가입기간 *</label>
+        <div class="select-wrap">
+          <select id="insuredPeriod">
+            <option value="">선택해주세요</option>
+            <option value="0.5">1년 미만</option>
+            <option value="2">1년 이상 ~ 3년 미만</option>
+            <option value="4">3년 이상 ~ 5년 미만</option>
+            <option value="7">5년 이상 ~ 10년 미만</option>
+            <option value="11">10년 이상</option>
+          </select>
+        </div>
+        <div class="info-box" style="margin-top:8px">
+          <span>ℹ️</span>
+          <span>현재까지 고용보험에 가입된 <strong>전체 직장의 합산 기간</strong>을 선택해주세요. Q1의 근무 이력을 입력했다면 자동으로 채워드립니다.</span>
+        </div>
+        <button class="btn-autofill" onclick="autoFillInsuredPeriod()">Q1 근무 이력에서 자동 입력 ↑</button>
+      </div>
+    </div>
+
+    <!-- 3개월 급여 -->
+    <div class="card">
+      <div class="card-label"><div class="card-label-dot"></div>최근 3개월 세전 월급</div>
+      <p style="font-size:13px; color:var(--text2); margin-bottom:16px">퇴직 직전 3개월의 세전 월급을 각각 입력해주세요</p>
+
+      <div class="salary-3-grid">
+        <div>
+          <label>3개월 전 월급</label>
+          <div class="money-input-wrap">
+            <input type="text" id="sal1" placeholder="0" oninput="formatMoneyInput(this)" inputmode="numeric">
+            <span class="money-unit">원</span>
+          </div>
+        </div>
+        <div>
+          <label>2개월 전 월급</label>
+          <div class="money-input-wrap">
+            <input type="text" id="sal2" placeholder="0" oninput="formatMoneyInput(this)" inputmode="numeric">
+            <span class="money-unit">원</span>
+          </div>
+        </div>
+        <div>
+          <label>1개월 전 (최근)</label>
+          <div class="money-input-wrap">
+            <input type="text" id="sal3" placeholder="0" oninput="formatMoneyInput(this)" inputmode="numeric">
+            <span class="money-unit">원</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 상여금 가이드 아코디언 -->
+      <div class="bonus-guide">
+        <div class="bonus-guide-header" onclick="toggleBonusGuide()">
+          <span>💡 상여금·보너스를 받았다면?</span>
+          <span class="bonus-arrow" id="bonusArrow">▾</span>
+        </div>
+        <div class="bonus-guide-body" id="bonusGuideBody">
+          <p style="margin-bottom:10px">상여금·보너스는 <strong>평균임금 계산 시 포함</strong>됩니다. 아래 방법으로 해당 월 월급에 합산해서 입력하세요.</p>
+          <div class="bonus-rule">
+            <div class="bonus-rule-title">📌 계산 방법</div>
+            <div class="bonus-rule-desc">
+              직전 3개월 내 지급된 상여금 → 해당 월 월급에 합산 입력<br>
+              분기·연간 상여금 → 3개월치 해당분만 환산해서 입력<br>
+              <strong>예)</strong> 연간 상여 600만원 → 3개월분 150만원 → 각 월에 50만원씩 추가
+            </div>
+          </div>
+          <div class="bonus-rule" style="margin-top:8px">
+            <div class="bonus-rule-title">⚠️ 제외 항목</div>
+            <div class="bonus-rule-desc">퇴직금, 해고예고수당, 연차 미사용수당은 평균임금 계산에서 <strong>제외</strong>됩니다.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span>ℹ️</span>
+        <span>1일 구직급여 = 3개월 1일 평균임금 × 60%<br>2026년 기준 하한액 <strong>66,048원</strong> / 상한액 <strong>68,100원</strong></span>
+      </div>
+    </div>
+
+    <!-- 근로 조건 -->
+    <div class="card">
+      <div class="card-label"><div class="card-label-dot"></div>근로 조건</div>
+      <div class="field">
+        <label>1일 소정근로시간</label>
+        <div class="select-wrap">
+          <select id="workHours">
+            <option value="8">8시간 (일반 근로자)</option>
+            <option value="7">7시간</option>
+            <option value="6">6시간</option>
+            <option value="5">5시간</option>
+            <option value="4">4시간</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="calcBenefit()">수급액·기간 계산하기 →</button>
+    <div id="benefitResult" style="margin-top:14px; display:none"></div>
+
+  </div>
+
+  <!-- 면책 문구 -->
+  <div class="disclaimer">
+    <div class="disclaimer-title">⚠ 면책 고지</div>
+    <p>본 계산기는 <strong>참고용 모의계산 도구</strong>로, 실제 수급 여부 및 금액과 다를 수 있습니다. 고용보험법 및 관련 규정은 변경될 수 있으며, 실제 수급액은 고용센터의 심사 결과에 따라 결정됩니다. 정확한 정보는 <strong>고용보험 홈페이지(www.ei.go.kr)</strong> 또는 가까운 <strong>고용센터</strong>에서 확인하시기 바랍니다.</p>
+  </div>
+
+</div>
+
+<div class="footer">
+  2026년 고용보험법 · 최저임금 기준 · 정확한 수급 여부는 고용센터에 문의하세요
+</div>
+
+<script>
+// ── 전역 상태 ──
+let isDisability = false;
+let isRepeat     = false;
+let companyCount = 0;
+const unpaidStates = {};
+
+// ── 탭 전환 ──
+function switchTab(n) {
+  document.getElementById('section1').classList.toggle('visible', n === 1);
+  document.getElementById('section2').classList.toggle('visible', n === 2);
+  document.getElementById('tab1').classList.toggle('active', n === 1);
+  document.getElementById('tab2').classList.toggle('active', n === 2);
+}
+
+// ── 초기화 ──
+window.onload = () => {
+  addCompany(); // Q1 근무이력 기본 1개
+  const today = new Date();
+  const resignInput = document.getElementById('resignDate');
+  if (resignInput) resignInput.value = today.toISOString().slice(0, 10);
+};
+
+// ── 토글 ──
+function toggleDisability() {
+  isDisability = !isDisability;
+  document.getElementById('disabilityToggle').classList.toggle('on', isDisability);
+}
+function toggleRepeat() {
+  isRepeat = !isRepeat;
+  document.getElementById('repeatToggle').classList.toggle('on', isRepeat);
+  document.getElementById('repeatWarn').style.display = isRepeat ? 'flex' : 'none';
+}
+function toggleBonusGuide() {
+  document.getElementById('bonusGuideBody').classList.toggle('open');
+  document.getElementById('bonusArrow').classList.toggle('open');
+}
+
+// ── 콤마 포맷 ──
+function formatMoneyInput(el) {
+  const raw = el.value.replace(/[^0-9]/g, '');
+  el.value = raw ? parseInt(raw, 10).toLocaleString('ko-KR') : '';
+}
+function getRawValue(id) {
+  const v = (document.getElementById(id)?.value || '').replace(/,/g, '');
+  const n = parseFloat(v);
+  return isNaN(n) ? 0 : n;
+}
+
+// ── 직장 카드 (Q1 전용, 단일 근무지) ──
+function addCompany() {
+  companyCount++;
+  const id = companyCount;
+  const div = document.createElement('div');
+  div.className = 'sub-card';
+  div.id = `company-${id}`;
+  div.innerHTML = `
+    <div class="field-row">
+      <div class="field"><label>입사일</label><input type="date" id="joinDate-${id}"></div>
+      <div class="field"><label>퇴사일</label><input type="date" id="leaveDate-${id}"></div>
+    </div>
+    <div class="field">
+      <div class="toggle-row" onclick="toggleUnpaid(${id})">
+        <div>
+          <div class="toggle-label">무급휴직 기간 있음</div>
+          <div class="toggle-sub">피보험 단위기간에서 제외됩니다</div>
+        </div>
+        <div class="toggle-switch" id="unpaidToggle-${id}"></div>
+      </div>
+    </div>
+    <div id="unpaidFields-${id}" style="display:none">
+      <div class="field-row" style="margin-top:10px">
+        <div class="field"><label>무급휴직 시작일</label><input type="date" id="unpaidStart-${id}"></div>
+        <div class="field"><label>무급휴직 종료일</label><input type="date" id="unpaidEnd-${id}"></div>
+      </div>
+    </div>`;
+  document.getElementById('companyList').appendChild(div);
+}
+function removeCompany(id) { document.getElementById(`company-${id}`)?.remove(); }
+function toggleUnpaid(id) {
+  unpaidStates[id] = !unpaidStates[id];
+  document.getElementById(`unpaidToggle-${id}`).classList.toggle('on', unpaidStates[id]);
+  document.getElementById(`unpaidFields-${id}`).style.display = unpaidStates[id] ? 'block' : 'none';
+}
+
+// ── Q1 근무이력 → Q2 가입기간 자동 입력 ──
+function autoFillInsuredPeriod() {
+  let totalDays = 0;
+  document.querySelectorAll('#companyList .sub-card').forEach(card => {
+    const id = card.id.replace('company-', '');
+    const j  = document.getElementById(`joinDate-${id}`)?.value;
+    const l  = document.getElementById(`leaveDate-${id}`)?.value;
+    if (!j || !l) return;
+    let d = daysBetween(j, l);
+    if (unpaidStates[id]) {
+      const us = document.getElementById(`unpaidStart-${id}`)?.value;
+      const ue = document.getElementById(`unpaidEnd-${id}`)?.value;
+      if (us && ue) d -= daysBetween(us, ue);
+    }
+    totalDays += Math.max(0, d);
+  });
+
+  if (totalDays === 0) {
+    alert('Q1 탭에서 입사일·퇴사일을 먼저 입력해주세요.');
+    return;
+  }
+
+  const years = totalDays / 365;
+  const sel = document.getElementById('insuredPeriod');
+  if      (years < 1)  sel.value = '0.5';
+  else if (years < 3)  sel.value = '2';
+  else if (years < 5)  sel.value = '4';
+  else if (years < 10) sel.value = '7';
+  else                 sel.value = '11';
+
+  // 시각적 피드백
+  sel.style.borderColor = 'var(--success)';
+  sel.style.boxShadow   = '0 0 0 3px rgba(22,163,74,0.12)';
+  setTimeout(() => { sel.style.borderColor = ''; sel.style.boxShadow = ''; }, 1500);
+}
+
+// ── 유틸 ──
+function daysBetween(d1, d2) {
+  return Math.max(0, Math.round((new Date(d2) - new Date(d1)) / 86400000));
+}
+function fmt(n) { return Math.round(n).toLocaleString('ko-KR') + '원'; }
+
+// ════════════════════════════════════
+// Q1 : 수급 조건 확인
+// ════════════════════════════════════
+function checkEligibility() {
+  const resignVal = document.getElementById('resignDate')?.value;
+  const resign    = resignVal ? new Date(resignVal) : new Date();
+
+  const cards = document.querySelectorAll('#companyList .sub-card');
+  let hasInput = false;
+  cards.forEach(card => {
+    const id = card.id.replace('company-', '');
+    if (document.getElementById(`joinDate-${id}`)?.value &&
+        document.getElementById(`leaveDate-${id}`)?.value) hasInput = true;
+  });
+  if (!hasInput) { alert('입사일과 퇴사일을 입력해주세요.'); return; }
+
+  const refStart = new Date(resign);
+  refStart.setMonth(refStart.getMonth() - 18);
+
+  let totalPaid   = 0;
+  let totalUnpaid = 0;
+
+  cards.forEach(card => {
+    const id      = card.id.replace('company-', '');
+    const joinVal  = document.getElementById(`joinDate-${id}`)?.value;
+    const leaveVal = document.getElementById(`leaveDate-${id}`)?.value;
+    if (!joinVal || !leaveVal) return;
+
+    const join  = new Date(joinVal);
+    const leave = new Date(leaveVal);
+    const start = join  < refStart ? refStart : join;
+    const end   = leave > resign   ? resign   : leave;
+    if (start >= end) return;
+
+    let days = daysBetween(start, end);
+    if (unpaidStates[id]) {
+      const us = document.getElementById(`unpaidStart-${id}`)?.value;
+      const ue = document.getElementById(`unpaidEnd-${id}`)?.value;
+      if (us && ue) {
+        const os = new Date(us) < start ? start : new Date(us);
+        const oe = new Date(ue) > end   ? end   : new Date(ue);
+        if (os < oe) { const u = daysBetween(os, oe); totalUnpaid += u; days -= u; }
+      }
+    }
+    totalPaid += days;
+  });
+
+  const eligible = totalPaid >= 180;
+  const el = document.getElementById('eligResult');
+  el.style.display = 'block';
+
+  if (eligible) {
+    el.innerHTML = `
+      <div class="verdict-card ok">
+        <div class="verdict-icon">✅</div>
+        <div class="verdict-title" style="color:var(--success)">수급 조건 충족!</div>
+        <div class="verdict-desc">피보험 단위기간 <strong>${totalPaid}일</strong></div>
+      </div>
+      <div class="info-box" style="justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px">
+        <span style="display:flex; gap:8px; align-items:flex-start"><span>💡</span><span>수급 조건을 충족했습니다! 예상 수급액도 계산해보세요.</span></span>
+        <button onclick="switchTab(2); window.scrollTo({top:0, behavior:'smooth'})" style="flex-shrink:0; background:var(--accent); color:white; border:none; border-radius:8px; padding:8px 16px; font-family:'Pretendard',sans-serif; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;">수급액 계산하기 →</button>
+      </div>`;
+  } else {
+    el.innerHTML = `
+      <div class="verdict-card ng">
+        <div class="verdict-icon">❌</div>
+        <div class="verdict-title" style="color:var(--danger)">수급 조건 미충족</div>
+        <div class="verdict-desc">피보험 단위기간 <strong>${totalPaid}일</strong> · 180일까지 <strong>${180 - totalPaid}일 부족</strong></div>
+      </div>
+      <div class="warn-box">
+        <span>⚠️</span>
+        <span>퇴사일 이전 18개월 내 피보험 단위기간이 180일에 미치지 못합니다. 무급휴직이 30일 이상이면 기준기간이 최대 36개월로 연장되니 확인해보세요.</span>
+      </div>`;
+  }
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ════════════════════════════════════
+// Q2 : 수급액·기간 계산
+// ════════════════════════════════════
+const daysTable = [
+  { max: 1,        y: 120, s: 120 },
+  { max: 3,        y: 150, s: 180 },
+  { max: 5,        y: 180, s: 210 },
+  { max: 10,       y: 210, s: 240 },
+  { max: Infinity, y: 240, s: 270 },
+];
+function getBenefitDays(years, seniorOrDisability) {
+  for (const row of daysTable) {
+    if (years < row.max) return seniorOrDisability ? row.s : row.y;
+  }
+  return seniorOrDisability ? 270 : 240;
+}
+
+// 드롭다운 value → 실제 연수 중간값 매핑
+const periodMap = { '0.5': 0.5, '2': 2, '4': 4, '7': 7, '11': 11 };
+// 드롭다운 value → 표시 텍스트
+const periodLabel = {
+  '0.5': '1년 미만',
+  '2':   '1년 이상 ~ 3년 미만',
+  '4':   '3년 이상 ~ 5년 미만',
+  '7':   '5년 이상 ~ 10년 미만',
+  '11':  '10년 이상'
+};
+
+function calcBenefit() {
+  const resignVal  = document.getElementById('resignDate').value;
+  const ageGroup   = document.getElementById('ageGroup').value;
+  const periodVal  = document.getElementById('insuredPeriod').value;
+
+  if (!resignVal)  { alert('퇴사일을 입력해주세요.');              return; }
+  if (!ageGroup)   { alert('퇴직 당시 나이를 선택해주세요.');       return; }
+  if (!periodVal)  { alert('고용보험 총 가입기간을 선택해주세요.');  return; }
+
+  const sal1 = getRawValue('sal1');
+  const sal2 = getRawValue('sal2');
+  const sal3 = getRawValue('sal3');
+  if (sal1 <= 0 && sal2 <= 0 && sal3 <= 0) {
+    alert('세전 월급을 1개월분 이상 입력해주세요.');
+    return;
+  }
+
+  // ── 1일 평균임금 ──
+  const resign = new Date(resignVal);
+  let totalSalary = 0, totalDays = 0;
+  [sal1, sal2, sal3].forEach((sal, i) => {
+    if (sal > 0) {
+      const m   = new Date(resign.getFullYear(), resign.getMonth() - (2 - i), 1);
+      const dim = new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate();
+      totalSalary += sal;
+      totalDays   += dim;
+    }
+  });
+  const avgDaily = totalSalary / totalDays;
+
+  // ── 나이 그룹 (드롭다운) ──
+  const isSenior = ageGroup === 'senior'; // 만 50세 이상 여부
+
+  // ── 고용보험 가입기간 (드롭다운) ──
+  const insuredYears = periodMap[periodVal];
+
+  // ── 1일 수급액 ──
+  const workHours = parseInt(document.getElementById('workHours').value);
+  const UPPER = 68100;
+  const LOWER = Math.round(66048 * workHours / 8);
+  const daily = Math.max(LOWER, Math.min(UPPER, avgDaily * 0.6));
+
+  // ── 소정급여일수 (50세 이상 또는 장애인이면 senior 컬럼) ──
+  let benefitDays = getBenefitDays(insuredYears, isSenior || isDisability);
+  let repeatNote  = '';
+  if (isRepeat) { benefitDays = Math.round(benefitDays * 0.9); repeatNote = ' (반복수급 10% 감액)'; }
+
+  const total = daily * benefitDays;
+
+  // 수급 신청 기한 (퇴사 후 12개월)
+  const expireDate = new Date(resign);
+  expireDate.setFullYear(expireDate.getFullYear() + 1);
+  const expireStr = `${expireDate.getFullYear()}년 ${expireDate.getMonth()+1}월 ${expireDate.getDate()}일`;
+
+  const el = document.getElementById('benefitResult');
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="total-card">
+      <div class="total-label">예상 총 수급액</div>
+      <div class="total-value">${fmt(total)}</div>
+      <div class="total-sub">${benefitDays}일 × 1일 ${fmt(daily)}${repeatNote}</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">예상 수급 기간</div>
+        <div class="stat-value">${benefitDays}<span class="stat-unit"> 일</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">1일 수급액</div>
+        <div class="stat-value">${Math.round(daily).toLocaleString()}<span class="stat-unit"> 원</span></div>
+      </div>
+    </div>
+    <div class="detail-card">
+      <div class="detail-row"><span class="k">퇴직 당시 나이</span>            <span class="v">${ageGroup === 'senior' ? '만 50세 이상' : '만 50세 미만'}</span></div>
+      <div class="detail-row"><span class="k">고용보험 가입기간</span>          <span class="v">${periodLabel[periodVal]}</span></div>
+      <div class="detail-row"><span class="k">3개월 1일 평균임금</span>         <span class="v">${fmt(avgDaily)}</span></div>
+      <div class="detail-row"><span class="k">1일 구직급여 (60%)</span>         <span class="v">${fmt(avgDaily * 0.6)}</span></div>
+      <div class="detail-row"><span class="k">적용 하한액 (${workHours}시간)</span>  <span class="v">${fmt(LOWER)}</span></div>
+      <div class="detail-row"><span class="k">적용 상한액</span>                <span class="v">68,100원</span></div>
+      <div class="detail-row" style="background:var(--accent-light)">
+        <span class="k" style="color:var(--accent); font-weight:600">수급 신청 기한</span>
+        <span class="v" style="color:var(--accent)">${expireStr}까지</span>
+      </div>
+    </div>`;
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+</script>
+</body>
+</html>
