@@ -753,6 +753,202 @@
     }
 
 
+    /* ── 콘텐츠 섹션 ── */
+    .content-section-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 16px 60px;
+    }
+
+    .content-section {
+      border-top: 1px solid var(--border);
+      padding: 36px 0 28px;
+    }
+
+    .content-h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+
+    .content-p {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+
+    .content-sub {
+      font-size: 13px;
+      color: var(--text3);
+      line-height: 1.7;
+    }
+
+    /* 번호 리스트 */
+    .content-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .content-list-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .content-list-num {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    /* 표 */
+    .content-table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    .content-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    .content-table th {
+      background: var(--accent-light);
+      color: var(--accent);
+      font-weight: 700;
+      padding: 12px 16px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .content-table td {
+      padding: 11px 16px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      color: var(--text2);
+    }
+
+    .content-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .content-table tbody tr:nth-child(even) td {
+      background: var(--bg);
+    }
+
+    /* 신청 절차 */
+    .content-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .content-step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+
+    .step-badge {
+      flex-shrink: 0;
+      background: var(--accent);
+      color: white;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-top: 2px;
+    }
+
+    .step-body {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .step-body p {
+      margin-top: 4px;
+    }
+
+    /* FAQ */
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 8px;
+      background: var(--white);
+    }
+
+    .faq-q {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      user-select: none;
+      gap: 12px;
+    }
+
+    .faq-q:hover {
+      background: var(--bg);
+    }
+
+    .faq-arrow {
+      flex-shrink: 0;
+      font-size: 12px;
+      color: var(--text3);
+      transition: transform 0.2s;
+    }
+
+    .faq-arrow.open {
+      transform: rotate(180deg);
+    }
+
+    .faq-a {
+      display: none;
+      padding: 14px 16px;
+      font-size: 13.5px;
+      color: var(--text2);
+      line-height: 1.75;
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .faq-a.open {
+      display: block;
+    }
+
     @media (max-width: 480px) {
       .field-row {
         grid-template-columns: 1fr;
@@ -992,8 +1188,164 @@
 
   </div>
 
+  <!-- ════════════════════════════════════════ -->
+  <!-- 콘텐츠 섹션 (애드센스 정책 대응)         -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="content-section-wrap">
+
+    <!-- 실업급여란? -->
+    <div class="content-section">
+      <h2 class="content-h2">실업급여란 무엇인가요?</h2>
+      <p class="content-p">실업급여(구직급여)는 고용보험에 가입된 근로자가 비자발적으로 실직했을 때 재취업 활동을 하는 기간 동안 생활 안정을 위해 지급되는 급여입니다. 단순히 회사를 그만뒀다고 받을 수 있는 것이 아니라, 고용보험법에서 정한 수급 요건을 충족해야 합니다.</p>
+      <p class="content-p">2026년 기준으로 1일 구직급여 하한액은 <strong>66,048원</strong>, 상한액은 <strong>68,100원</strong>입니다. 수급 기간은 고용보험 가입 기간과 나이에 따라 <strong>최소 120일~최대 270일</strong>까지 달라집니다.</p>
+    </div>
+
+    <!-- 수급 자격 조건 -->
+    <div class="content-section">
+      <h2 class="content-h2">실업급여 수급 자격 조건</h2>
+      <p class="content-p">아래 3가지 조건을 모두 충족해야 실업급여를 받을 수 있습니다.</p>
+      <div class="content-list">
+        <div class="content-list-item">
+          <div class="content-list-num">1</div>
+          <div>
+            <strong>비자발적 퇴사</strong><br>
+            <span class="content-sub">권고사직, 계약만료, 회사 폐업, 정당한 이유 있는 자진퇴사 등. 단순 자진퇴사(개인 사정)는 원칙적으로 불가합니다.</span>
+          </div>
+        </div>
+        <div class="content-list-item">
+          <div class="content-list-num">2</div>
+          <div>
+            <strong>피보험 단위기간 180일 이상</strong><br>
+            <span class="content-sub">퇴사일 이전 18개월 내에 고용보험에 가입된 실제 근무일수가 180일 이상이어야 합니다. 여러 직장의 기간을 합산할 수 있습니다.</span>
+          </div>
+        </div>
+        <div class="content-list-item">
+          <div class="content-list-num">3</div>
+          <div>
+            <strong>적극적인 재취업 활동</strong><br>
+            <span class="content-sub">수급 중에도 고용센터에 정기적으로 출석하여 재취업 활동(입사지원, 면접 등)을 증명해야 합니다.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 수급 기간 표 -->
+    <div class="content-section">
+      <h2 class="content-h2">고용보험 가입기간별 수급 기간</h2>
+      <p class="content-p">소정급여일수(수급 기간)는 퇴직 당시 나이와 고용보험 총 가입기간에 따라 아래와 같이 결정됩니다.</p>
+      <div class="content-table-wrap">
+        <table class="content-table">
+          <thead>
+            <tr>
+              <th>고용보험 가입기간</th>
+              <th>만 50세 미만</th>
+              <th>만 50세 이상 · 장애인</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1년 미만</td><td>120일</td><td>120일</td></tr>
+            <tr><td>1년 이상 ~ 3년 미만</td><td>150일</td><td>180일</td></tr>
+            <tr><td>3년 이상 ~ 5년 미만</td><td>180일</td><td>210일</td></tr>
+            <tr><td>5년 이상 ~ 10년 미만</td><td>210일</td><td>240일</td></tr>
+            <tr><td>10년 이상</td><td>240일</td><td>270일</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 신청 절차 -->
+    <div class="content-section">
+      <h2 class="content-h2">실업급여 신청 절차</h2>
+      <div class="content-steps">
+        <div class="content-step">
+          <div class="step-badge">STEP 1</div>
+          <div class="step-body">
+            <strong>이직확인서 제출 확인</strong>
+            <p class="content-sub">퇴사 후 전 직장이 고용센터에 이직확인서를 제출했는지 확인하세요. 미제출 시 전 직장에 요청해야 합니다.</p>
+          </div>
+        </div>
+        <div class="content-step">
+          <div class="step-badge">STEP 2</div>
+          <div class="step-body">
+            <strong>워크넷 구직등록</strong>
+            <p class="content-sub">고용보험 홈페이지(ei.go.kr) 또는 워크넷(work.go.kr)에서 구직 신청을 먼저 완료해야 합니다.</p>
+          </div>
+        </div>
+        <div class="content-step">
+          <div class="step-badge">STEP 3</div>
+          <div class="step-body">
+            <strong>수급자격 신청자 온라인 교육 이수</strong>
+            <p class="content-sub">고용보험 홈페이지에서 수급자격 신청 전 온라인 교육(약 1시간)을 이수합니다.</p>
+          </div>
+        </div>
+        <div class="content-step">
+          <div class="step-badge">STEP 4</div>
+          <div class="step-body">
+            <strong>거주지 관할 고용센터 방문</strong>
+            <p class="content-sub">교육 이수 후 14일 이내에 거주지 관할 고용센터를 방문하여 수급자격 인정 신청을 합니다.</p>
+          </div>
+        </div>
+        <div class="content-step">
+          <div class="step-badge">STEP 5</div>
+          <div class="step-body">
+            <strong>실업인정 및 급여 수령</strong>
+            <p class="content-sub">수급자격 인정 후 1~4주마다 고용센터에 출석하거나 온라인으로 실업인정을 받고, 급여가 지급됩니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="content-section">
+      <h2 class="content-h2">자주 묻는 질문 (FAQ)</h2>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>자진퇴사도 실업급여를 받을 수 있나요?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">원칙적으로 자진퇴사는 수급이 어렵습니다. 다만 ①임금 체불, ②직장 내 괴롭힘, ③근로 조건이 채용 시와 현저히 달라진 경우, ④통근이 왕복 3시간 이상인 경우, ⑤건강 악화로 인한 퇴사 등 정당한 사유가 있다면 자진퇴사도 수급이 가능합니다. 정확한 판단은 고용센터에서 확인하세요.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>피보험 단위기간 180일은 어떻게 계산하나요?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">피보험 단위기간은 달력상 날짜가 아니라, 실제로 고용보험에 가입되어 보수를 받은 날수를 기준으로 합니다. 주말·공휴일이라도 월급제 근로자라면 포함되며, 무급휴직 기간은 제외됩니다. 여러 직장에 다닌 경우 각 직장의 기간을 합산합니다.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>실업급여 신청 기한이 있나요?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">퇴사일로부터 <strong>12개월</strong> 이내에 수급자격을 신청해야 합니다. 이 기간을 넘기면 수급 일수가 남아 있어도 더 이상 받을 수 없습니다. 퇴사 후 가능한 빨리 신청하는 것이 유리합니다.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>실업급여 수령 중 아르바이트(부업)를 해도 되나요?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">수급 중 취업 또는 근로는 반드시 고용센터에 신고해야 합니다. 신고 없이 근로하면 부정수급으로 급여 반환 및 추가 제재를 받을 수 있습니다. 단기 아르바이트의 경우에도 신고 후 해당 일수에 대한 급여가 조정되어 지급됩니다.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>계약직(기간제)도 실업급여를 받을 수 있나요?</span>
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a">네, 계약 만료로 인한 퇴사는 비자발적 이직으로 인정되어 피보험 단위기간 180일 조건만 충족하면 실업급여를 받을 수 있습니다. 단, 계약 만료 후 재계약을 사측이 제안했음에도 본인이 거부한 경우에는 자진퇴사로 처리될 수 있습니다.</div>
+      </div>
+    </div>
+
+  </div>
+  <!-- /content-section-wrap -->
+
   <div class="footer">
-    2026년 고용보험법 · 최저임금 기준 · 정확한 수급 여부는 고용센터에 문의하세요
+    2026년 고용보험법 · 최저임금 기준 · 정확한 수급 여부는 고용센터에 문의하세요<br>
+    <a href="/privacy" style="color:var(--text3); text-decoration:underline; margin-top:6px; display:inline-block;">개인정보처리방침</a>
   </div>
 
   <script>
@@ -1270,6 +1622,19 @@
       '7': '5년 이상 ~ 10년 미만',
       '11': '10년 이상'
     };
+
+    function toggleFaq(el) {
+      const arrow = el.querySelector('.faq-arrow');
+      const answer = el.nextElementSibling;
+      const isOpen = answer.classList.contains('open');
+      // 모두 닫기
+      document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+      document.querySelectorAll('.faq-arrow').forEach(a => a.classList.remove('open'));
+      if (!isOpen) {
+        answer.classList.add('open');
+        arrow.classList.add('open');
+      }
+    }
 
     function calcBenefit() {
       let isValid = true;
